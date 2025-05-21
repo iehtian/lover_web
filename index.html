@@ -7,14 +7,20 @@
     <!-- 引入外部CSS样式文件 -->
     <link rel="stylesheet" href="src/styles.css">
 </head>
-<body>
-    <!-- 主图片展示 -->
+<body>    <!-- 主图片展示 -->
     <img class="main-image" src="src/image/1747148129596.jpg" alt="展示图片">    <!-- 音乐播放器和歌词容器 -->    <div id="playerControlsContainer">
         <div id="lyricsContainer"></div>
-        <audio id="audioPlayer" controls>
-            <source src="src/music/今天你要嫁给我/蔡依林, 陶喆 - 今天你要嫁给我.mp3" type="audio/mpeg">
-            您的浏览器不支持 audio 元素。
-        </audio>
+        <div class="audio-controls">
+            <audio id="audioPlayer" controls>
+                <source src="src/music/今天你要嫁给我/蔡依林, 陶喆 - 今天你要嫁给我.mp3" type="audio/mpeg">
+                您的浏览器不支持 audio 元素。
+            </audio>
+            <button id="nextSongBtn" title="随机切换歌曲">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M18 13c0 3.31-2.69 6-6 6s-6-2.69-6-6h2c0 2.21 1.79 4 4 4s4-1.79 4-4-1.79-4-4-4v3l-4-4 4-4v3c3.31 0 6 2.69 6 6z"/>
+                </svg>
+            </button>
+        </div>
     </div>
 
     <!-- 引入外部JavaScript文件 -->

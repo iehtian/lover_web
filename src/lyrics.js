@@ -6,9 +6,127 @@
 // 初始化变量
 const lyricsContainer = document.getElementById('lyricsContainer');
 const audioPlayer = document.getElementById('audioPlayer');
+const playerControlsContainer =
+    document.getElementById('playerControlsContainer');
 let parsedLyrics = [];
 let currentLyricIndex = -1;
 let lyricsLoaded = false;
+let currentSongIndex = -1;
+
+// 可用的歌曲列表
+const songs = [
+  {
+    folder: '今天你要嫁给我',
+    audio: '蔡依林, 陶喆 - 今天你要嫁给我.mp3',
+    lyric: 'a829678b430ea29ff29d7f9aa5bfb955.lrc',
+    type: 'audio/mpeg'
+  },
+  {
+    folder: '每到周末我要离开地球',
+    audio: '檀健次 - 每到周末我要离开地球.flac',
+    lyric: '每到周末我要离开地球 - 檀健次.lrc',
+    type: 'audio/flac'
+  },
+  {
+    folder: '美丽的孤独',
+    audio: '檀健次 - 美丽的孤独.flac',
+    lyric: '美丽的孤独 - 檀健次.lrc',
+    type: 'audio/flac'
+  },
+  {
+    folder: '蒙娜丽莎',
+    audio: '檀健次 - 蒙娜丽莎.flac',
+    lyric: '蒙娜丽莎 - 檀健次.lrc',
+    type: 'audio/flac'
+  },
+  {
+    folder: '那些荧火',
+    audio: '檀健次 - 那些荧火.flac',
+    lyric: '那些荧火 - 檀健次.lrc',
+    type: 'audio/flac'
+  },
+  {
+    folder: '烧掉',
+    audio: '檀健次 - 烧掉.flac',
+    lyric: '烧掉 - 檀健次.lrc',
+    type: 'audio/flac'
+  },
+  {
+    folder: '一把烟火放完',
+    audio: '檀健次 - 一把烟花放完.flac',
+    lyric: '一把烟花放完 - 檀健次.lrc',
+    type: 'audio/flac'
+  },
+  {
+    folder: '炙暗时刻',
+    audio: '檀健次 - 炙暗时刻.flac',
+    lyric: '炙暗时刻 - 檀健次.lrc',
+    type: 'audio/flac'
+  },
+  {
+    folder: 'INU',
+    audio: '檀健次 - INU.flac',
+    lyric: 'INU - 檀健次.lrc',
+    type: 'audio/flac'
+  }
+];
+
+/**
+ * 随机选择一首歌曲
+ * @returns {number} 选中歌曲的索引
+ */
+function getRandomSong() {
+  // 确保不重复选择同一首歌
+  let newIndex;
+  do {
+    newIndex = Math.floor(Math.random() * songs.length);
+  } while (newIndex === currentSongIndex && songs.length > 1);
+
+  currentSongIndex = newIndex;
+  return currentSongIndex;
+}
+
+/**
+ * 加载选定的歌曲和歌词
+ * @param {number} songIndex - 歌曲索引
+ */
+function loadSong(songIndex) {
+  const song = songs[songIndex];
+  const audioPath = `src/music/${song.folder}/${song.audio}`;
+  const lrcPath = `src/music/${song.folder}/${song.lyric}`;
+
+  // 更新音频源
+  audioPlayer.src = audioPath;
+  audioPlayer.type = song.type;
+
+  // 加载歌词
+  loadLyrics(lrcPath);
+
+  // 更新背景图片（从歌曲文件夹中的图片）
+  try {
+    // 如果是MP3，尝试使用文件夹中的图片
+    if (song.type === 'audio/mpeg') {
+      playerControlsContainer.style.backgroundImage =
+          `url('src/music/${song.folder}/109951166916020363.jpg')`;
+    }
+    // FLAC文件中的专辑图片需要通过元数据API获取，但在普通网页中无法读取
+    // 这里我们使用一个简单的回退解决方案
+    else {
+      // 随机背景颜色作为回退
+      const colors =
+          ['#ff5e62', '#ff9966', '#a8ff78', '#78ffd6', '#33b5e5', '#8e54e9'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      playerControlsContainer.style.backgroundImage = 'none';
+      playerControlsContainer.style.backgroundColor = randomColor;
+    }
+  } catch (e) {
+    console.error('设置背景图片失败:', e);
+  }
+
+  // 播放歌曲
+  audioPlayer.load();
+  audioPlayer.play().catch(err => console.error('播放失败:', err));
+}
 
 // 监听播放事件，只有点击播放按钮后才显示歌词容器并加载歌词
 audioPlayer.addEventListener('play', () => {
@@ -16,7 +134,8 @@ audioPlayer.addEventListener('play', () => {
   lyricsContainer.style.display = 'block';
 
   if (!lyricsLoaded) {
-    loadLyrics('src/music/今天你要嫁给我/a829678b430ea29ff29d7f9aa5bfb955.lrc');
+    // 第一次点击播放时，随机选择一首歌曲
+    loadSong(getRandomSong());
     lyricsLoaded = true;
   } else {
     // 如果歌词已加载，确保当前歌词容器已准备好
@@ -25,9 +144,6 @@ audioPlayer.addEventListener('play', () => {
       prepareLyricsContainer();
     }
   }
-
-  // 预先测量文本宽度
-  setTimeout(measureTextWidths, 500);
 });
 
 /**
@@ -132,6 +248,11 @@ function updateCurrentLyric() {
 // 监听音频播放时间更新事件，更新当前歌词
 audioPlayer.addEventListener('timeupdate', updateCurrentLyric);
 
+// 监听播放结束事件，随机播放下一首歌曲
+audioPlayer.addEventListener('ended', () => {
+  loadSong(getRandomSong());
+});
+
 /**
  * 加载歌词文件
  * @param {string} lrcPath - 歌词文件路径
@@ -158,6 +279,16 @@ function loadLyrics(lrcPath) {
 }
 
 // 初始化时不显示任何内容
+
+// 添加随机切换歌曲按钮的事件监听器
+document.addEventListener('DOMContentLoaded', () => {
+  const nextSongBtn = document.getElementById('nextSongBtn');
+  if (nextSongBtn) {
+    nextSongBtn.addEventListener('click', () => {
+      loadSong(getRandomSong());
+    });
+  }
+});
 
 /**
  * 尝试最后的修复方式：完全移除伪元素，使用两个元素叠加

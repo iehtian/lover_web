@@ -36,12 +36,41 @@ img.main-image {
     gap: 10px;
     width: 250px;
     max-width: 80vw;
+    transition: background-image 0.5s ease, background-color 0.5s ease;
 }
 
 /* 音频播放器样式 */
 audio {
     width: 100%;
     max-width: 220px;
+}
+
+/* 音频控制区域 */
+.audio-controls {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+/* 随机播放按钮 */
+#nextSongBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#nextSongBtn:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
 }
 
 /* 歌词容器样式 */
