@@ -1,0 +1,117 @@
+/* 全局样式 */
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: sans-serif;
+}
+
+/* 主图片样式 */
+img.main-image {
+    max-width: 50%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 播放器容器样式 */
+#playerControlsContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background-image: url('../src/music/今天你要嫁给我/109951166916020363.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    gap: 10px;
+    width: 250px;
+    max-width: 80vw;
+}
+
+/* 音频播放器样式 */
+audio {
+    width: 100%;
+    max-width: 220px;
+}
+
+/* 歌词容器样式 */
+#lyricsContainer {
+    padding: 8px;
+    border: 1px solid #ddd;
+    max-height: 100px;
+    width: 100%;
+    max-width: 200px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.85);
+    text-align: left;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+#lyricsContainer p {
+    margin: 3px 0;
+    padding: 2px 4px;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    border-radius: 3px;
+}
+
+#lyricsContainer p.highlight {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+    font-weight: bold;
+    transform: scale(1.05);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    img.main-image {
+        max-width: 80%;
+        margin-bottom: 20px;
+    }
+
+    #playerControlsContainer {
+        bottom: 10px;
+        right: 10px;
+        padding: 10px;
+        width: 220px;
+    }
+
+    #lyricsContainer {
+        max-height: 80px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    img.main-image {
+        max-width: 95%;
+    }
+
+    #playerControlsContainer {
+        width: 200px;
+        max-width: 90vw;
+        bottom: 5px;
+        right: 5px;
+        padding: 8px;
+    }
+
+    #lyricsContainer {
+        max-height: 70px;
+        padding: 5px;
+    }
+
+    #lyricsContainer p {
+        margin: 2px 0;
+        padding: 1px 3px;
+    }
+}
