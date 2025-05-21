@@ -53,23 +53,83 @@ audio {
     max-width: 200px;
     overflow-y: auto;
     background-color: rgba(255, 255, 255, 0.85);
-    text-align: left;
+    text-align: center; /* 改为 center 以便居中 inline-block 子元素 */
     font-size: 12px;
     border-radius: 4px;
+    display: none; /* 初始隐藏歌词容器 */
 }
 
 #lyricsContainer p {
     margin: 3px 0;
-    padding: 2px 4px;
-    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    padding: 8px 10px;
     border-radius: 3px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
-#lyricsContainer p.highlight {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: #000;
-    font-weight: bold;
-    transform: scale(1.05);
+/* 歌词动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#lyricsContainer p#current-lyric {
+    position: relative;
+    display: inline-block; /* 改为 inline-block 以便被父容器居中，且宽度自适应内容 */
+    margin: 3px 0;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    /* 文本样式 */
+    font-weight: 500;
+    color: #333;
+    text-align: left; /* 改为 left，确保文字从左边开始，以便 ::before 叠加 */
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#lyricsContainer p#current-lyric.animate-in {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* 歌词进度效果 - 完全重构 */
+#lyricsContainer p#current-lyric::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--progress, 0%);
+    height: 100%;
+    overflow: hidden; /* 关键属性：确保只显示指定宽度 */
+    
+    /* 确保精确对齐 */
+    box-sizing: border-box;
+    padding: 8px 10px;
+    
+    /* 继承文本样式 */
+    color: transparent;
+    background: linear-gradient(to right, #ff3366, #ff9933);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: left; /* 改为 left，与 #current-lyric 的文本对齐方式一致 */
+    white-space: nowrap;
+
+    /* 平滑过渡 */
+    transition: width 0.05s linear;
 }
 
 /* 响应式设计 */
